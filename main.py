@@ -8,6 +8,18 @@ from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
 
+
+
+
+st.markdown(
+    f"""
+    <style>
+    {open("static/styles.css").read()}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 def main():
     st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
     
