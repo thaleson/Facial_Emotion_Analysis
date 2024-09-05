@@ -11,7 +11,11 @@ from tempfile import NamedTemporaryFile
 
 
 
-st.markdown(
+
+def main():
+    st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
+
+    st.markdown(
     f"""
     <style>
     {open("static/styles.css").read()}
@@ -20,8 +24,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-def main():
-    st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
     
     st.title("🎬 Análise de Emoções Faciais em Tempo Real e em Vídeos")
 
