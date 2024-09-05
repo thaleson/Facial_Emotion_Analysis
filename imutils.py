@@ -3,53 +3,86 @@ import numpy as np
 import cv2
 
 def translate(image, x, y):
-	# Define a matriz de tradução e realiza a tradução
-	M = np.float32([[1, 0, x], [0, 1, y]])
-	shifted = cv2.warpAffine(image, M, (image.shape[1], image.shape[0]))
+    """
+    Translates an image by shifting it along the x and y axes.
 
-	# Retorna a imagem traduzida
-	return shifted
+    Parameters:
+    - image (numpy.ndarray): The image to be translated.
+    - x (int): The number of pixels to shift the image horizontally.
+    - y (int): The number of pixels to shift the image vertically.
 
-def rotate(image, angle, center = None, scale = 1.0):
-	# Obtém as dimensões da imagem
-	(h, w) = image.shape[:2]
+    Returns:
+    - numpy.ndarray: The translated image.
+    """
+    # Define the translation matrix and perform the translation
+    M = np.float32([[1, 0, x], [0, 1, y]])
+    shifted = cv2.warpAffine(image, M, (image.shape[1], image.shape[0]))
 
-	# Se o centro for None, inicialize-o como o centro da imagem
-	if center is None:
-		center = (w / 2, h / 2)
+    # Return the translated image
+    return shifted
 
-	# Executa a rotação
-	M = cv2.getRotationMatrix2D(center, angle, scale)
-	rotated = cv2.warpAffine(image, M, (w, h))
+def rotate(image, angle, center=None, scale=1.0):
+    """
+    Rotates an image by a specified angle around a given center point.
 
-	# Retorna a imagem girada
-	return rotated
+    Parameters:
+    - image (numpy.ndarray): The image to be rotated.
+    - angle (float): The angle in degrees to rotate the image.
+    - center (tuple, optional): The (x, y) coordinates of the center of rotation. If None, the center of the image is used.
+    - scale (float, optional): The scale factor for the rotation. Default is 1.0 (no scaling).
 
-def resize(image, width = None, height = None, inter = cv2.INTER_AREA):
-	# Inicializa as dimensões da imagem a ser redimensionada e pegue o tamanho da imagem
-	dim = None
-	(h, w) = image.shape[:2]
+    Returns:
+    - numpy.ndarray: The rotated image.
+    """
+    # Get the dimensions of the image
+    (h, w) = image.shape[:2]
 
-	# Se tanto a largura quanto a altura são None, então retorna a imagem original
-	if width is None and height is None:
-		return image
+    # If center is None, initialize it to the center of the image
+    if center is None:
+        center = (w / 2, h / 2)
 
-	# Verifica se a largura é None
-	if width is None:
-		# Calcula a proporção da altura e constrói as dimensões
-		r = height / float(h)
-		dim = (int(w * r), height)
+    # Perform the rotation
+    M = cv2.getRotationMatrix2D(center, angle, scale)
+    rotated = cv2.warpAffine(image, M, (w, h))
 
-	# Caso contrário, a altura é None
-	else:
-		# Calcula a proporção da largura e constrói as dimensões
-		r = width / float(w)
-		dim = (width, int(h * r))
+    # Return the rotated image
+    return rotated
 
-	# Redimensiona a imagem
-	resized = cv2.resize(image, dim, interpolation = inter)
+def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
+    """
+    Resizes an image to the specified width and/or height while maintaining aspect ratio.
 
-	# Devolve a imagem redimensionada
-	return resized
+    Parameters:
+    - image (numpy.ndarray): The image to be resized.
+    - width (int, optional): The desired width of the resized image. If None, the height is used.
+    - height (int, optional): The desired height of the resized image. If None, the width is used.
+    - inter (int, optional): The interpolation method used for resizing. Default is cv2.INTER_AREA.
 
-	
+    Returns:
+    - numpy.ndarray: The resized image.
+    """
+    # Initialize the dimensions of the resized image and get the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # If both width and height are None, return the original image
+    if width is None and height is None:
+        return image
+
+    # Check if width is None
+    if width is None:
+        # Calculate the ratio of height and build the dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # Otherwise, height is None
+    else:
+        # Calculate the ratio of width and build the dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # Resize the image
+    resized = cv2.resize(image, dim, interpolation=inter)
+
+    # Return the resized image
+    return resized

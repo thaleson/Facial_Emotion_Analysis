@@ -13,6 +13,14 @@ from tempfile import NamedTemporaryFile
 
 
 def main():
+
+    """
+    Main function to run the Streamlit application for real-time facial emotion analysis.
+
+    This function sets up the Streamlit page configuration, styles, and title. It allows the user to upload a video file,
+    and upon pressing the "Start Processing" button, processes the video to detect and analyze facial emotions.
+    The results are displayed in real-time, showing the detected emotions on the faces within the video.
+    """
     st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
 
     st.markdown(
