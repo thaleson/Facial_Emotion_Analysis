@@ -43,6 +43,8 @@ def main():
             temp_video.write(video_file.read())
             temp_video.close()
 
+            st.write(f"📂 Arquivo temporário salvo em: {temp_video.name}")
+
             # Inicializar modelos
             emotion_model = EmotionModel(FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PATH)
             face_detector = FaceDetector(HAARCASCADE_PATH)
@@ -51,6 +53,8 @@ def main():
             output_file = NamedTemporaryFile(delete=False, suffix=".mp4")
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             out = cv2.VideoWriter(output_file.name, fourcc, 20.0, (800, 600))  # Ajuste a resolução conforme necessário
+
+            st.write(f"📂 Arquivo de saída: {output_file.name}")
 
             video_capture = cv2.VideoCapture(temp_video.name)
 
@@ -100,6 +104,6 @@ def main():
             # Limpar arquivos temporários
             os.remove(temp_video.name)
             os.remove(output_file.name)
-
+            
 if __name__ == '__main__':
     main()
