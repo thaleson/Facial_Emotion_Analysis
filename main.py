@@ -60,6 +60,7 @@ def main():
 
             st.write("🎥 Processando vídeo...")
 
+            frame_count = 0
             while True:
                 ret, frame = video_capture.read()
                 if not ret:
@@ -83,11 +84,12 @@ def main():
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame = imutils.resize(frame, width=800)  # Ajuste a resolução conforme necessário
                 out.write(frame)
+                frame_count += 1
 
             video_capture.release()
             out.release()
 
-            st.write("✅ Processamento concluído!")
+            st.write(f"✅ Processamento concluído! {frame_count} frames processados.")
 
             if os.path.exists(output_file.name):
                 st.video(output_file.name)  # Exibe o vídeo processado
