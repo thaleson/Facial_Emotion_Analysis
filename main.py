@@ -7,6 +7,7 @@ from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
 import os
+import time
 
 def main():
     """
@@ -49,13 +50,6 @@ def main():
             emotion_model = EmotionModel(FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PATH)
             face_detector = FaceDetector(HAARCASCADE_PATH)
 
-            # Prepare para salvar o vídeo processado
-            output_file = NamedTemporaryFile(delete=False, suffix=".mp4")
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter(output_file.name, fourcc, 20.0, (800, 600))  # Ajuste a resolução conforme necessário
-
-            st.write(f"📂 Arquivo de saída: {output_file.name}")
-
             video_capture = cv2.VideoCapture(temp_video.name)
 
             if not video_capture.isOpened():
@@ -64,7 +58,8 @@ def main():
 
             st.write("🎥 Processando vídeo...")
 
-            frame_count = 0
+            frame_out = st.empty()  # Cria um espaço vazio no Streamlit para exibir o vídeo
+
             while True:
                 ret, frame = video_capture.read()
                 if not ret:
@@ -86,26 +81,15 @@ def main():
                         cv2.putText(frame, expression_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250, 250, 250), 2)
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame = imutils.resize(frame, width=800)  # Ajuste a resolução conforme necessário
-                out.write(frame)
-                frame_count += 1
+                frame_out.image(frame, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
+
+                time.sleep(0.03)  # Aproximadamente 30 FPS
 
             video_capture.release()
-            out.release()
-
-            st.write(f"✅ Processamento concluído! {frame_count} frames processados.")
-
-            # Testar a leitura do vídeo processado
-            test_video = cv2.VideoCapture(output_file.name)
-            if not test_video.isOpened():
-                st.write("🚨 Erro ao abrir o vídeo processado.")
-            else:
-                st.write(f"📹 Exibindo o vídeo processado: {output_file.name}")
-                st.video(output_file.name)  # Exibe o vídeo processado
+            st.write("✅ Processamento concluído!")
 
             # Limpar arquivos temporários
             os.remove(temp_video.name)
-            os.remove(output_file.name)
             
 if __name__ == '__main__':
     main()
