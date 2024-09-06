@@ -11,10 +11,6 @@ import os
 def main():
     """
     Main function to run the Streamlit application for real-time facial emotion analysis.
-
-    This function sets up the Streamlit page configuration, styles, and title. It allows the user to upload a video file,
-    and upon pressing the "Start Processing" button, processes the video to detect and analyze facial emotions.
-    The results are displayed in real-time, showing the detected emotions on the faces within the video.
     """
     st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
 
@@ -39,8 +35,9 @@ def main():
     if video_file:
         st.write("📂 Vídeo carregado com sucesso!")
 
-        # Botão para iniciar o processamento do vídeo
         if st.button("▶️ Iniciar Processamento"):
+            st.write("🔄 Iniciando processamento...")
+
             # Salvar o vídeo temporariamente
             temp_video = NamedTemporaryFile(delete=False, suffix=".mp4")
             temp_video.write(video_file.read())
@@ -56,6 +53,12 @@ def main():
             out = cv2.VideoWriter(output_file.name, fourcc, 20.0, (800, 600))  # Ajuste a resolução conforme necessário
 
             video_capture = cv2.VideoCapture(temp_video.name)
+
+            if not video_capture.isOpened():
+                st.write("🚨 Erro ao abrir o vídeo.")
+                return
+
+            st.write("🎥 Processando vídeo...")
 
             while True:
                 ret, frame = video_capture.read()
@@ -85,7 +88,12 @@ def main():
             out.release()
 
             st.write("✅ Processamento concluído!")
-            st.video(output_file.name)  # Exibe o vídeo processado
+
+            if os.path.exists(output_file.name):
+                st.video(output_file.name)  # Exibe o vídeo processado
+                st.write("📹 Exibindo o vídeo processado.")
+            else:
+                st.write("🚨 O vídeo processado não foi encontrado.")
 
             # Limpar arquivos temporários
             os.remove(temp_video.name)
