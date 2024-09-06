@@ -6,7 +6,7 @@ from config import EMOTIONS, FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PA
 from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
-import time
+import os
 
 def main():
     """
@@ -42,18 +42,21 @@ def main():
         # Botão para iniciar o processamento do vídeo
         if st.button("▶️ Iniciar Processamento"):
             # Salvar o vídeo temporariamente
-            temp_video = NamedTemporaryFile(delete=False)
+            temp_video = NamedTemporaryFile(delete=False, suffix=".mp4")
             temp_video.write(video_file.read())
             temp_video.close()
-            
+
             # Inicializar modelos
             emotion_model = EmotionModel(FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PATH)
             face_detector = FaceDetector(HAARCASCADE_PATH)
 
-            video_capture = cv2.VideoCapture(temp_video.name)
-            frame_out = st.empty()  # Área para exibir os frames
+            # Prepare para salvar o vídeo processado
+            output_file = NamedTemporaryFile(delete=False, suffix=".mp4")
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter(output_file.name, fourcc, 20.0, (800, 600))  # Ajuste a resolução conforme necessário
 
-            # Processar vídeo frame a frame
+            video_capture = cv2.VideoCapture(temp_video.name)
+
             while True:
                 ret, frame = video_capture.read()
                 if not ret:
@@ -73,16 +76,20 @@ def main():
                         
                         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                         cv2.putText(frame, expression_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250, 250, 250), 2)
-                
+
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame_out.image(frame, channels="RGB", use_column_width=True)
-                
-                # Adicionar um pequeno atraso para simular a reprodução em tempo real
-                # O valor do atraso pode ser ajustado conforme necessário
-                time.sleep(0.03)  # Aproximadamente 30 FPS
+                frame = imutils.resize(frame, width=800)  # Ajuste a resolução conforme necessário
+                out.write(frame)
 
             video_capture.release()
+            out.release()
+
             st.write("✅ Processamento concluído!")
+            st.video(output_file.name)  # Exibe o vídeo processado
+
+            # Limpar arquivos temporários
+            os.remove(temp_video.name)
+            os.remove(output_file.name)
 
 if __name__ == '__main__':
     main()
