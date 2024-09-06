@@ -95,11 +95,13 @@ def main():
 
             st.write(f"✅ Processamento concluído! {frame_count} frames processados.")
 
-            if os.path.exists(output_file.name):
+            # Testar a leitura do vídeo processado
+            test_video = cv2.VideoCapture(output_file.name)
+            if not test_video.isOpened():
+                st.write("🚨 Erro ao abrir o vídeo processado.")
+            else:
                 st.write(f"📹 Exibindo o vídeo processado: {output_file.name}")
                 st.video(output_file.name)  # Exibe o vídeo processado
-            else:
-                st.write("🚨 O vídeo processado não foi encontrado.")
 
             # Limpar arquivos temporários
             os.remove(temp_video.name)
