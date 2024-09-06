@@ -83,7 +83,7 @@ def main():
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_out.image(frame, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
 
-                time.sleep(0.01)  # Aproximadamente 30 FPS
+                time.sleep(0.03)  # Aproximadamente 30 FPS
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
