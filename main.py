@@ -44,7 +44,7 @@ def main():
             temp_video.write(video_file.read())
             temp_video.close()
 
-            st.write(f"📂 Arquivo temporário salvo em: {temp_video.name}")
+
 
             # Inicializar modelos
             emotion_model = EmotionModel(FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PATH)
@@ -83,7 +83,7 @@ def main():
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_out.image(frame, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
 
-                time.sleep(0.03)  # Aproximadamente 30 FPS
+                time.sleep(0.06)  # Aproximadamente 30 FPS
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
