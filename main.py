@@ -1,4 +1,3 @@
-# main.py
 import cv2
 import streamlit as st
 import imutils
@@ -8,12 +7,7 @@ from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
 
-
-
-
-
 def main():
-
     """
     Main function to run the Streamlit application for real-time facial emotion analysis.
 
@@ -32,7 +26,6 @@ def main():
     unsafe_allow_html=True
 )
 
-    
     st.title("🎬 Análise de Emoções Faciais em Tempo Real e em Vídeos")
 
     st.write("""
@@ -57,8 +50,9 @@ def main():
             face_detector = FaceDetector(HAARCASCADE_PATH)
 
             video_capture = cv2.VideoCapture(temp_video.name)
-            frame_out = st.empty()
+            frame_out = st.empty()  # Área para exibir os frames
 
+            # Processar vídeo frame a frame
             while True:
                 ret, frame = video_capture.read()
                 if not ret:
@@ -81,6 +75,10 @@ def main():
                 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_out.image(frame, channels="RGB", use_column_width=True)
+                
+                # Adicionar um pequeno atraso para simular a reprodução em tempo real
+                # O valor do atraso pode ser ajustado conforme necessário
+                st.time.sleep(0.03)  # Aproximadamente 30 FPS
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
