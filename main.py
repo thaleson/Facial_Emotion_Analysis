@@ -92,8 +92,8 @@ def main():
             st.write(f"✅ Processamento concluído! {frame_count} frames processados.")
 
             if os.path.exists(output_file.name):
+                st.write(f"📹 Exibindo o vídeo processado: {output_file.name}")
                 st.video(output_file.name)  # Exibe o vídeo processado
-                st.write("📹 Exibindo o vídeo processado.")
             else:
                 st.write("🚨 O vídeo processado não foi encontrado.")
 
