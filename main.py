@@ -6,6 +6,7 @@ from config import EMOTIONS, FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PA
 from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
+import time
 
 def main():
     """
@@ -78,7 +79,7 @@ def main():
                 
                 # Adicionar um pequeno atraso para simular a reprodução em tempo real
                 # O valor do atraso pode ser ajustado conforme necessário
-                st.time.sleep(0.03)  # Aproximadamente 30 FPS
+                time.sleep(0.03)  # Aproximadamente 30 FPS
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
