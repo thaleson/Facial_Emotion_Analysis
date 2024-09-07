@@ -7,22 +7,18 @@ from emotion_model import EmotionModel
 from face_detector import FaceDetector
 from tempfile import NamedTemporaryFile
 import os
-import time
 
 def main():
-    """
-    Main function to run the Streamlit application for real-time facial emotion analysis.
-    """
     st.set_page_config(page_title="🎬 Análise de Emoções Faciais", page_icon=":movie_camera:")
 
     st.markdown(
-    f"""
-    <style>
-    {open("static/styles.css").read()}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+        f"""
+        <style>
+        {open("static/styles.css").read()}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.title("🎬 Análise de Emoções Faciais em Tempo Real e em Vídeos")
 
@@ -44,8 +40,6 @@ def main():
             temp_video.write(video_file.read())
             temp_video.close()
 
-
-
             # Inicializar modelos
             emotion_model = EmotionModel(FACE_MODEL_ARCHITECTURE_PATH, FACE_MODEL_WEIGHTS_PATH)
             face_detector = FaceDetector(HAARCASCADE_PATH)
@@ -58,9 +52,10 @@ def main():
 
             st.write("🎥 Processando vídeo...")
 
-            frame_out = st.empty()  # Cria um espaço vazio no Streamlit para exibir o vídeo
+            # Stream video as bytes
+            stframe = st.empty()  # Cria um espaço vazio no Streamlit para exibir o vídeo
 
-            while True:
+            while video_capture.isOpened():
                 ret, frame = video_capture.read()
                 if not ret:
                     st.write("📽️ Fim do vídeo.")
@@ -76,20 +71,21 @@ def main():
                         predictions = emotion_model.predict(extracted_face)
                         prediction_result = np.argmax(predictions)
                         expression_text = EMOTIONS[prediction_result]
-                        
+
                         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                         cv2.putText(frame, expression_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250, 250, 250), 2)
 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame_out.image(frame, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
-
-                time.sleep(0.03)  # Aproximadamente 30 FPS
+                # Convert frame to bytes
+                _, buffer = cv2.imencode('.jpg', frame)
+                frame_bytes = buffer.tobytes()
+                stframe.image(frame_bytes, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
 
             # Limpar arquivos temporários
             os.remove(temp_video.name)
-            
+
 if __name__ == '__main__':
     main()
