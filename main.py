@@ -66,7 +66,7 @@ def main():
                     st.write("📽️ Fim do vídeo.")
                     break
 
-                frame = imutils.resize(frame, width=00)
+                frame = imutils.resize(frame, width=600)
                 gray, detected_faces = face_detector.detect_faces(frame)
 
                 for face in detected_faces:
