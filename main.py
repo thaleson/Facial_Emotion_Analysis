@@ -37,7 +37,7 @@ def main():
         st.write("📂 Vídeo carregado com sucesso!")
 
         if st.button("▶️ Iniciar Processamento"):
-       
+            st.write("🔄 Iniciando processamento...")
 
             # Salvar o vídeo temporariamente
             temp_video = NamedTemporaryFile(delete=False, suffix=".mp4")
@@ -66,7 +66,7 @@ def main():
                     st.write("📽️ Fim do vídeo.")
                     break
 
-                frame = imutils.resize(frame, width=600)
+                frame = imutils.resize(frame, width=800)
                 gray, detected_faces = face_detector.detect_faces(frame)
 
                 for face in detected_faces:
@@ -83,7 +83,7 @@ def main():
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_out.image(frame, channels="RGB", use_column_width=True)  # Exibe o frame no Streamlit
 
-              
+                time.sleep(0.03)  # Aproximadamente 30 FPS
 
             video_capture.release()
             st.write("✅ Processamento concluído!")
@@ -93,3 +93,5 @@ def main():
             
 if __name__ == '__main__':
     main()
+
+como faço pro streamlit roda sem ser frame a frame ? tipo ta reproduzindo muito ruim 
