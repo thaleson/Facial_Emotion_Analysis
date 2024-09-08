@@ -94,4 +94,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-como faço pro streamlit roda sem ser frame a frame ? tipo ta reproduzindo muito ruim 
+
